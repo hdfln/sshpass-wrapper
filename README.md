@@ -11,12 +11,12 @@
 
 ```bash
 git clone git@github.com:hdfln/sshpass-wrapper.git ~/sshpass-wrapper
-cat <<EOF >> .zshrc
+cat <<EOF >> ~/.zshrc
 if [ -f ~/sshpass-wrapper/.zsh_sshpass_wrapper ]; then
     source ~/sshpass-wrapper/.zsh_sshpass_wrapper
 fi
 EOF
-source .zshrc
+source ~/.zshrc
 ```
 
 ### ~/sshpass-wrapper/hostsにIPアドレスを記述したファイルを追加
