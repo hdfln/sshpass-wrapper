@@ -5,6 +5,11 @@ function sshpass-wrapper() {
     FILE=~/sshpass-wrapper/secrets/${TYPE}
     USER=$(head -n 1 ${FILE})
     PASS=$(tail -n 1 ${FILE})
-    HOST=$(grep -v -e "^#" -e "^$" ~/sshpass-wrapper/hosts/* | fzf -x | awk '{print $1}')
+    HOST=$(get-host)
     ${SSHPASS_COMMAND} -p ${PASS} ${SSH_COMMAND} ${USER}@${HOST} ${@:2}
+}
+
+functions search-host() {
+    HOST=$(grep -v -e "^#" -e "^$" ~/sshpass-wrapper/hosts/* | fzf -x | awk '{print $1}')
+    echo $HOST
 }
