@@ -6,5 +6,5 @@ function sshpass-wrapper() {
     USER=$(head -n 1 ${FILE})
     PASS=$(tail -n 1 ${FILE})
     HOST=$(grep -v -e "^#" -e "^$" ~/sshpass-wrapper/hosts/* | fzf -x | awk '{print $1}')
-    ${SSHPASS_COMMAND} -p $PASS ${SSH_COMMAND} ${USER}@${HOST} ${@:2}
+    ${SSHPASS_COMMAND} -p ${PASS} ${SSH_COMMAND} ${USER}@${HOST} ${@:2}
 }
