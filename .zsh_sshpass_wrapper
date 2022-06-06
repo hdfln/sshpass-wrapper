@@ -1,0 +1,10 @@
+SSHPASS_COMMAND=("sshpass")
+SSH_COMMAND=("ssh" "-F" ~/sshpass-wrapper/sshpass-wrapper.config "-o" "PreferredAuthentications=password,keyboard-interactive" "-o" "PubkeyAuthentication=no" "-o" "StrictHostKeyChecking=no")
+function sshpass-wrapper() {
+    TYPE=$1
+    FILE=~/sshpass-wrapper/secrets/${TYPE}
+    USER=$(head -n 1 ${FILE})
+    PASS=$(tail -n 1 ${FILE})
+    HOST=$(grep -v -e "^#" -e "^$" ~/sshpass-wrapper/hosts/* | fzf -x | awk '{print $1}')
+    ${SSHPASS_COMMAND} -p $PASS ${SSH_COMMAND} ${USER}@${HOST} ${@:2}
+}
