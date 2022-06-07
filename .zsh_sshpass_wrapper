@@ -5,7 +5,7 @@ function sshpass-wrapper() {
     FILE=~/sshpass-wrapper/secrets/${TYPE}
     USER=$(head -n 1 ${FILE})
     PASS=$(tail -n 1 ${FILE})
-    HOST=$(get-host)
+    HOST=$(search-host)
     ${SSHPASS_COMMAND} -p ${PASS} ${SSH_COMMAND} ${USER}@${HOST} ${@:2}
 }
 
