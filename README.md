@@ -10,10 +10,11 @@
 ## インストール
 
 ```bash
-git clone git@github.com:hdfln/sshpass-wrapper.git ~/sshpass-wrapper
-cat <<EOF >> ~/.zshrc
-if [ -f ~/sshpass-wrapper/.zsh_sshpass_wrapper ]; then
-    source ~/sshpass-wrapper/.zsh_sshpass_wrapper
+ghq get git@github.com:hdfln/sshpass-wrapper.git
+cat <'<EOF' >> ~/.zshrc
+SSHPASS_WRAPPER_DEFINITION_FILE=~/ghq/github.com/hdfln/sshpass-wrapper/.zsh_sshpass_wrapper
+if [ -f ${SSHPASS_WRAPPER_DEFINITION_FILE} ]; then
+    source ${SSHPASS_WRAPPER_DEFINITION_FILE}
 fi
 EOF
 source ~/.zshrc
@@ -51,3 +52,7 @@ pass-fuga
 
 実行すると、接続先のホストの候補が表示されます。
 クレデンシャルファイルに設定したユーザー名・パスワードで接続します。
+
+`get-pass <使用するクレデンシャル>`
+
+実行すると、パスワードがクリップボードに保存されます。クレデンシャルを省略すると、クレデンシャルの選択画面が表示されます。

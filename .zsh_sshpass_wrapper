@@ -1,15 +1,31 @@
+SSHPASS_WRAPPER_DIR=~/ghq/github.com/hdfln/sshpass-wrapper
 SSHPASS_COMMAND=("sshpass")
-SSH_COMMAND=("ssh" "-F" ~/sshpass-wrapper/sshpass-wrapper.config "-o" "PreferredAuthentications=password,keyboard-interactive" "-o" "PubkeyAuthentication=no" "-o" "StrictHostKeyChecking=no")
-function sshpass-wrapper() {
+SSH_COMMAND=("ssh" "-F" ${SSHPASS_WRAPPER_DIR}/sshpass-wrapper.config "-o" "PreferredAuthentications=password,keyboard-interactive" "-o" "PubkeyAuthentication=no" "-o" "StrictHostKeyChecking=no")
+function sshpass-wrapper-base() {
     TYPE=$1
-    FILE=~/sshpass-wrapper/secrets/${TYPE}
+    FILE=${SSHPASS_WRAPPER_DIR}/secrets/${TYPE}
     USER=$(head -n 1 ${FILE})
     PASS=$(tail -n 1 ${FILE})
+    HOST=$2
+    ${SSHPASS_COMMAND} -p ${PASS} ${SSH_COMMAND} ${USER}@${HOST} ${@:3}
+}
+
+function sshpass-wrapper() {
+    TYPE=$1
     HOST=$(search-host)
-    ${SSHPASS_COMMAND} -p ${PASS} ${SSH_COMMAND} ${USER}@${HOST} ${@:2}
+    sshpass-wrapper-base ${TYPE} ${HOST} ${@:2}
 }
 
 functions search-host() {
-    HOST=$(grep -v -e "^#" -e "^$" ~/sshpass-wrapper/hosts/* | fzf -x | awk '{print $1}')
+    HOST=$(grep -v -e "^#" -e "^$" ${SSHPASS_WRAPPER_DIR}/hosts/* | fzf -x | awk '{print $1}')
     echo $HOST
+}
+
+functions get-pass() {
+    if [ $# -eq 0 ];then
+        USER=$(ls ${SSHPASS_WRAPPER_DIR}/secrets/ | fzf)
+    else
+        USER=$1
+    fi
+    tail -n 1 ${SSHPASS_WRAPPER_DIR}/secrets/${USER} | pbcopy
 }
